@@ -3,10 +3,11 @@ import { ref } from "vue";
 
 const plclicked = ref(false);
 const passwordLength = ref(12);
-const includeUppercase = ref(true);
-const includeNumbers = ref(true);
-const includeSymbols = ref(true);
-const generatedPassword = ref("");
+const includeUppercase = ref(false);
+const includeLowercase = ref(false);
+const includeNumbers = ref(false);
+const includeSymbols = ref(false);
+const generatedPassword = ref("Select Options");
 const passwordStrength = ref("");
 const passwordStrengthColor = ref("");
 
@@ -14,12 +15,15 @@ const evaluatePasswordStrength = (password) => {
   const lengthStrength = password.length >= 8 ? "Strong" : "Weak";
   const uppercaseStrength =
     includeUppercase.value && /[A-Z]/.test(password) ? "Strong" : "Weak";
+     const lowercaseStrength =
+    includeLowercase.value && /[a-z]/.test(password) ? "Strong" : "Weak";
   const numberStrength =
     includeNumbers.value && /\d/.test(password) ? "Strong" : "Weak";
 
   const overallStrength = [
     lengthStrength,
     uppercaseStrength,
+    lowercaseStrength,
     numberStrength,
   ].every((strength) => strength === "Strong")
     ? "Strong"
@@ -32,12 +36,22 @@ const evaluatePasswordStrength = (password) => {
 };
 
 const generatePassword = () => {
+
+
+   if (!includeUppercase.value && !includeLowercase.value && !includeNumbers.value && !includeSymbols.value) {
+    generatedPassword.value = "Select Options";
+    return;
+  }
   const uppercaseChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   const lowercaseChars = "abcdefghijklmnopqrstuvwxyz";
   const numberChars = "0123456789";
   const symbolChars = "#$%!&*@";
 
-  let chars = lowercaseChars;
+  let chars = "";
+
+   if (includeLowercase.value) {
+    chars += lowercaseChars;
+  }
 
   if (includeUppercase.value) {
     chars += uppercaseChars;
@@ -127,11 +141,11 @@ const plToggle = () => {
           <input
             class="checkbox"
             type="checkbox"
-            id="choice2"
-            name="choice2"
+            id="includeLowercase"
             value="lowercase"
+            v-model="includeLowercase"
           />
-          <label for="includeNumbers"> Include Lowercase Letters</label><br />
+          <label for="includeLowerCase"> Include Lowercase Letters</label><br />
           <input
             class="checkbox"
             type="checkbox"
