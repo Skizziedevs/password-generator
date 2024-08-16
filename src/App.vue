@@ -279,7 +279,7 @@ label {
   margin-bottom: 13px;
 }
 .main {
-  width: 350px;
+  width: 340px;
   height: 450px;
   position: absolute;
   top: 50%;
